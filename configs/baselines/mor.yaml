@@ -1,0 +1,10 @@
+_base_: _base.yaml
+baseline:
+  name: MoR
+  regime: trained_on_target_graph
+  family: retrieval
+  resources: {trained_on_target_graph: true}
+  params:
+    field_representation: physical_attributes
+    retrievers: [text, structure]
+    training: {split: train, lr: 1.0e-4, epochs: 5, batch_size: 64, seed: 0}

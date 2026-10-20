@@ -1,0 +1,33 @@
+# Shared graph-generation settings. Reservoir files override what differs.
+reservoir:
+  name: null
+  prefix: null
+  grid:
+    source: grdecl            # grdecl | synthetic
+    path: null                # relative to the repository root (grdecl source only)
+    cell_size_m: {dx: null, dy: null, dz: null}
+    top_depth_m: null
+
+graph:
+  seed: 20240917
+  regions:
+    n_regions: null
+    kmeans_iters: 50
+  patterns:
+    types: [five_spot, inverted_five_spot, nine_spot, inverted_nine_spot, line_drive, staggered_line_drive, peripheral]
+    spacing_m: null
+  wells:
+    placements_per_pattern: null
+    max_placement_attempts: 400
+    completion_options: [all, upper, lower]
+    skin_range: [-1.0, 3.0]
+  controls:
+    inj_rate_m3d: null        # per injector
+    prod_bhp_bar: null
+    schedules:
+      - {shape: constant,  stages: 1, multipliers: [1.0]}
+      - {shape: ramp_up,   stages: 3, multipliers: [0.6, 0.8, 1.0]}
+      - {shape: ramp_down, stages: 3, multipliers: [1.0, 0.8, 0.6]}
+  edges:
+    combines_adjacent_regions: true
+    transforms_controls: true

@@ -1,0 +1,43 @@
+# Surrogate model Psi: scenario/node input features -> estimated objectives, Eq. (1).
+# Fitted on surrogate_train_scenarios.txt.gz (training library, 80% of the simulated
+# scenarios); accuracy (Table S6) is reported on eval_candidate_scenarios.txt.gz
+# (evaluation library, the remaining 20%), which is never used for fitting or for
+# normalization statistics.
+surrogate:
+  inputs: pharaoh.features.FEATURE_NAMES   # 64 features of a complete scenario (see pharaoh/features.py)
+  input_dim: 64
+  outputs: [eur_mmbbl, npv_musd, capex_musd, cum_water_mmbbl]
+  # Auxiliary head: final water cut WC = q_w / (q_o + q_w) from the full-physics runs.
+  # Supervised on the training library only; used for water-cut constraints.
+  auxiliary_outputs: [water_cut]
+  architecture:
+    type: mlp
+    layers: [64, 256, 256, 128, 64]    # input, hidden..., last shared layer; one linear head per output
+    activation: silu
+    dropout: 0.1
+    layer_norm: true
+  input_scaling: zscore                # statistics from the training library only
+  output_scaling: zscore               # statistics from the training library only
+  training:
+    optimizer: adamw
+    lr: 1.0e-3
+    weight_decay: 1.0e-4
+    epochs: 300
+    batch_size: 256
+    loss: mse
+    auxiliary_loss_weight: 0.5
+    early_stopping: {validation: 0.1 of training library, metric: mse, patience: 20}
+    seed: 0
+  # Psi_agg: estimates for a set of nodes are first resolved to the complete
+  # scenarios (Control nodes) they denote and de-duplicated by scenario id, so a
+  # plan is never counted once per hierarchy level. Superposition rules apply only
+  # across distinct scenarios developed together.
+  aggregation:
+    dedupe_by: scenario_id
+    rules:
+      eur_mmbbl: sum
+      cum_water_mmbbl: sum
+      npv_musd: sum
+      capex_musd: sum
+      water_cut: production_weighted_mean
+  checkpoint: checkpoints/surrogate/{reservoir}.pt

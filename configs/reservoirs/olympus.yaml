@@ -1,0 +1,33 @@
+_base_: _base.yaml
+reservoir:
+  name: Olympus
+  prefix: OLY
+  grid:
+    source: grdecl
+    path: data/raw/olympus/OLYMPUS_1.DATA
+    cell_size_m: {dx: 50.0, dy: 50.0, dz: 3.0}   # approximate average cell size
+    top_depth_m: 2000.0
+graph:
+  regions: {n_regions: 24}
+  patterns:
+    spacing_m: [400, 550, 700, 850, 1000]
+  wells:
+    placements_per_pattern: 12
+  controls:
+    inj_rate_m3d: [800, 1200, 1600, 2000, 2400]
+    prod_bhp_bar: [120, 150, 180, 210]
+
+full_physics:
+  simulator: OPM Flow
+  model_realization: 1
+  horizon_years: 20
+  report_step_days: 30
+  water_breakthrough_threshold: 0.05     # water cut at which breakthrough is recorded
+  injector_bhp_limit_bar: 235.0
+  control_stage_years: [5, 7.5, 7.5]   # lengths of the schedule stages (multi-stage schedules)
+  economics:
+    oil_price_usd_bbl: 45.0
+    water_handling_usd_bbl: 6.0
+    water_injection_usd_bbl: 2.0
+    discount_rate: 0.08
+    well_cost_model: {fixed_musd_per_well: 15.0, usd_per_meter: 4500.0}

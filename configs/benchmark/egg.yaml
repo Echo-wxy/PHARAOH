@@ -1,0 +1,14 @@
+_base_: _base.yaml
+benchmark:
+  graph_dir: data/petrograph/egg
+  split_dir: splits/egg
+  relation_centric_fraction: 0.685
+  outcome_constraint_ranges:
+    npv_musd_min: [80, 160]
+    capex_musd_max: [120, 220]
+  library:
+    size: 6400
+    eval_size: 1280
+  pools:
+    pool_size: 1280
+    train_pool_size: 1280

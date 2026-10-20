@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "Generic contributor metadata: replace with the final paper authors and citation before the official research release."
+title: "PHARAOH"
+type: software
+authors:
+  - name: "PHARAOH research contributors"
+version: 0.1.0
+license: MIT

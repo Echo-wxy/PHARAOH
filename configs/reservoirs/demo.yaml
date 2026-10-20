@@ -1,0 +1,37 @@
+# Small synthetic grid for the quick demo and tests.
+_base_: _base.yaml
+reservoir:
+  name: Demo
+  prefix: DEMO
+  grid:
+    source: synthetic
+    path: none
+    synthetic: {nx: 36, ny: 30, nz: 4, seed: 7, style: channelized}
+    cell_size_m: {dx: 25.0, dy: 25.0, dz: 4.0}
+    top_depth_m: 2000.0
+graph:
+  regions: {n_regions: 4}
+  patterns:
+    types: [five_spot, inverted_five_spot, line_drive, peripheral]
+    spacing_m: [75, 125]
+  wells:
+    placements_per_pattern: 6
+    completion_options: [all, lower]
+  controls:
+    inj_rate_m3d: [150, 300]
+    prod_bhp_bar: [150, 180]
+
+full_physics:
+  simulator: synthetic                  # demo only: scripts/demo_synthetic_results.py
+  model_realization: 0
+  horizon_years: 10
+  report_step_days: 30
+  water_breakthrough_threshold: 0.05     # water cut at which breakthrough is recorded
+  injector_bhp_limit_bar: 300.0
+  control_stage_years: [3, 3.5, 3.5]
+  economics:
+    oil_price_usd_bbl: 45.0
+    water_handling_usd_bbl: 6.0
+    water_injection_usd_bbl: 2.0
+    discount_rate: 0.08
+    well_cost_model: {fixed_musd_per_well: 4.0, usd_per_meter: 1500.0}

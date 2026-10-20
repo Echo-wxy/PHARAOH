@@ -1,0 +1,14 @@
+# Non-agentic baseline: rank Control nodes directly by the surrogate under the
+# query's structured objectives and constraints (no LLM, no hierarchical search).
+_base_: _base.yaml
+baseline:
+  name: Surrogate-Rank
+  regime: training_free
+  family: retrieval
+  resources: {surrogate_scores: true, feasibility_rules: true}
+  params:
+    candidate_level: Control
+    subquery_source: structured_query  # weights = query reference_weights, constraints = query constraints
+    scalarization: chebyshev
+    objective_scaling: zscore_train_library
+    top_k: 20

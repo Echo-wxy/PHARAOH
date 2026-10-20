@@ -1,0 +1,40 @@
+# Full PHARAOH configuration (reference model for every comparison).
+agent:
+  backbone: gpt-4.1
+  temperature: 0.7
+  max_steps: 20                       # T_max
+  n_parallel: 3                       # n
+  max_format_retries: 2
+  prompts:
+    system: agent/system.md
+    user: agent/user.md
+    observation: agent/observation.md
+    format_error: agent/format_error.md
+    tools: agent/tools.json
+  tools:
+    proxy_search: {enabled: true, k_default: 3}
+    proxy_expand: {enabled: true, k_default: 5, query_ranking: true, type_filter: true}
+  relevance:
+    scorer: surrogate                 # surrogate | bm25
+    scalarization: chebyshev          # Eq. (2)
+    reference_point: utopia
+    objective_scaling: zscore_train_library   # per-reservoir z-score with training-library statistics, before Eq. (2)
+    infeasible: exclude               # rel = -inf
+  archive:
+    final_ranking: hypervolume_contribution   # hypervolume_contribution | crowding_distance
+  aggregation:
+    method: pareto_ns                 # pareto_ns | voting | ordering | random
+    objective_senses: {eur_mmbbl: max, npv_musd: max, capex_musd: min, cum_water_mmbbl: min}
+    count_sense: max                  # nodes seen in more trajectories rank higher, Eq. (7)
+    output_size: 20
+    dedupe_by: scenario_id
+  surrogate_config: configs/surrogate.yaml
+  logging:
+    per_query: [llm_calls, prompt_tokens, completion_tokens, surrogate_calls, gpu_seconds, api_seconds, wall_clock_seconds]
+  run_seeds: [0, 1, 2]
+
+evaluation:
+  split: test
+  query_subset: all                   # all | <file in the split directory>
+  metrics: [hit@1, recall@20, mrr]
+  ground_truth: full_physics_pareto

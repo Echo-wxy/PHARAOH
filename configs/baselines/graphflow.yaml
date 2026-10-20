@@ -1,0 +1,9 @@
+_base_: _base.yaml
+baseline:
+  name: GraphFlow
+  regime: trained_on_target_graph
+  family: agent
+  resources: {llm_backbone: Qwen2.5-7B, step_budget: 20, trained_on_target_graph: true}
+  params:
+    reward: textual_relevance
+    training: {split: train, objective: detailed_balance, lr: 1.0e-5, epochs: 1, lora_r: 16, seed: 0}

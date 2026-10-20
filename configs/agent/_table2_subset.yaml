@@ -1,0 +1,5 @@
+# Table 2: every configuration, including the full model, is run on the same
+# fixed 10% test subset (100 queries per reservoir) with the three run seeds.
+_base_: pharaoh.yaml
+evaluation:
+  query_subset: test_subset_qids.txt

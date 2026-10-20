@@ -1,0 +1,14 @@
+_base_: _base.yaml
+benchmark:
+  graph_dir: data/petrograph/olympus
+  split_dir: splits/olympus
+  relation_centric_fraction: 0.273
+  outcome_constraint_ranges:
+    npv_musd_min: [100, 220]
+    capex_musd_max: [250, 450]
+  library:
+    size: 4800
+    eval_size: 960
+  pools:
+    pool_size: 960
+    train_pool_size: 960

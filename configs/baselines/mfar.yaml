@@ -1,0 +1,11 @@
+_base_: _base.yaml
+baseline:
+  name: mFAR
+  regime: trained_on_target_graph
+  family: retrieval
+  resources: {surrogate_scores: true, trained_on_target_graph: true}
+  params:
+    encoder: facebook/contriever-msmarco
+    fields: [text, attributes, surrogate_scores]
+    scorers: [lexical, dense]
+    training: {split: train, lr: 5.0e-5, epochs: 3, batch_size: 64, negatives: in_batch, seed: 0}

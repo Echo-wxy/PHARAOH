@@ -1,0 +1,18 @@
+# Small benchmark on the synthetic demo graph.
+_base_: _base.yaml
+benchmark:
+  graph_dir: outputs/demo/graph
+  split_dir: outputs/demo/splits
+  n_queries: {train: 120, val: 30, test: 40}
+  relation_centric_fraction: 0.5
+  outcome_constraint_ranges:
+    npv_musd_min: [20, 100]
+    capex_musd_max: [38, 55]
+    water_cut_max: [0.35, 0.55]
+  library:
+    size: 1000
+    eval_size: 200
+    min_structural_matches: 3
+  pools:
+    pool_size: 200
+    train_pool_size: 200

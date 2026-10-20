@@ -1,0 +1,4 @@
+_base_: pharaoh.yaml   # full test split
+agent:
+  aggregation:
+    method: voting

@@ -1,0 +1,7 @@
+_base_: _base.yaml
+baseline:
+  name: PHARAOH-distilled
+  regime: trained_on_target_graph
+  family: agent
+  resources: {surrogate_scores: true, feasibility_rules: true, llm_backbone: Qwen2.5-7B,
+              step_budget: 20, trained_on_target_graph: true}

@@ -1,0 +1,50 @@
+# Physics-consistent distillation: L = L_NTP + lambda * L_phys, Eq. (8).
+distill:
+  teacher:
+    backbone: gpt-4.1
+    temperature: 0.7
+    n_teach: 3                        # trajectories per training query
+    max_steps: 20
+    trajectory_filtering: none
+  train_queries_per_graph: 6000
+  student:
+    base_model: Qwen2.5-7B
+    quantization: none                # bf16 weights during training; 4-bit for deployment
+  lora:
+    r: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+  optim:
+    name: adamw
+    lr: 1.0e-5
+    epochs: 1
+    batch_size: 16                    # sequences per optimizer step (with gradient accumulation)
+    warmup_steps: 100
+    weight_decay: 0.0
+    grad_clip_norm: 1.0
+  context_length: 16384
+  early_stopping:
+    split: val
+    metric: val_loss
+    patience: 3                       # evaluations, every 200 steps
+  loss:
+    ntp:
+      tokens: assistant               # tool calls and their arguments
+    phys:
+      lambda: 0.1
+      estimator: reinforce            # Eq. (11)
+      reward: negative_squared_discrepancy   # Eq. (10)
+      baseline: minibatch_mean
+      gradient_tokens: tool_call
+      reward_normalization: minibatch_zscore   # (R - mean) / (std + 1e-6) within each minibatch
+      objective_scaling: zscore_train_library  # per-reservoir z-score (training library) before Eq. (9)
+      samples_per_query: 4                     # student rollouts per query for the REINFORCE term
+      hard_constraint_penalty: 1.0             # added discrepancy (scaled units) for constraint violations
+  monitoring:
+    validation_subset_size: 500
+    log_every_steps: 20
+    record: [loss_ntp, loss_phys, reward_mean, reward_std, grad_norm_before_clip, nonfinite_steps]
+  token_accounting:
+    report: [assistant_tokens, total_tokens]   # assistant tokens carry the NTP loss; total includes prompts and observations
+  seed: 42

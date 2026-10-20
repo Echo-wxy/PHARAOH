@@ -1,0 +1,33 @@
+_base_: _base.yaml
+reservoir:
+  name: Egg
+  prefix: EGG
+  grid:
+    source: grdecl
+    path: data/raw/egg/Egg_Model_ECL.DATA
+    cell_size_m: {dx: 8.0, dy: 8.0, dz: 4.0}
+    top_depth_m: 4000.0
+graph:
+  regions: {n_regions: 4}
+  patterns:
+    spacing_m: [40, 56, 72, 88]
+  wells:
+    placements_per_pattern: 24
+  controls:
+    inj_rate_m3d: [40, 60, 79.5, 100, 120]
+    prod_bhp_bar: [375, 385, 395, 405]
+
+full_physics:
+  simulator: OPM Flow
+  model_realization: 0                  # standard (unperturbed) permeability field
+  horizon_years: 10
+  report_step_days: 30
+  water_breakthrough_threshold: 0.05     # water cut at which breakthrough is recorded
+  injector_bhp_limit_bar: 420.0
+  control_stage_years: [3.33, 3.33, 3.34]
+  economics:
+    oil_price_usd_bbl: 20.0             # 126 USD/m3
+    water_handling_usd_bbl: 3.0         # 19 USD/m3
+    water_injection_usd_bbl: 1.0        # 6 USD/m3
+    discount_rate: 0.0
+    well_cost_model: {fixed_musd_per_well: 2.0, usd_per_meter: 1500.0}

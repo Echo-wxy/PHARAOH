@@ -1,0 +1,7 @@
+# Resource declaration for the proposed method (run settings: configs/agent/pharaoh.yaml).
+_base_: _base.yaml
+baseline:
+  name: PHARAOH
+  regime: training_free
+  family: agent
+  resources: {surrogate_scores: true, feasibility_rules: true, llm_backbone: gpt-4.1, step_budget: 20}

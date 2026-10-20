@@ -1,0 +1,45 @@
+{
+  "subquery": {
+    "type": "object",
+    "required": ["weights", "reference_point", "constraints"],
+    "properties": {
+      "weights": {"type": "object", "description": "objective name -> non-negative weight"},
+      "reference_point": {"description": "\"utopia\" or objective name -> target value"},
+      "constraints": {
+        "type": "array",
+        "items": {"type": "object", "required": ["field", "op", "value"],
+                  "properties": {"field": {"type": "string"}, "op": {"enum": [">=", "<=", "=="]}, "value": {}}}
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "ProxySearch",
+      "description": "Return the k best nodes of one hierarchy level across the whole graph, ranked by the surrogate under the subquery.",
+      "arguments": {
+        "subquery": {"$ref": "subquery"},
+        "level": {"enum": ["Region", "Pattern", "Well", "Control"]},
+        "k": {"type": "integer", "minimum": 1, "maximum": 50}
+      },
+      "required": ["subquery", "level", "k"]
+    },
+    {
+      "name": "ProxyExpand",
+      "description": "Return the k best neighbors of a node, restricted to the given node and edge types, ranked by the surrogate under the subquery.",
+      "arguments": {
+        "node_id": {"type": "string"},
+        "subquery": {"$ref": "subquery"},
+        "k": {"type": "integer", "minimum": 1, "maximum": 50},
+        "node_types": {"type": "array", "items": {"enum": ["Region", "Pattern", "Well", "Control"]}, "minItems": 1},
+        "edge_types": {"type": "array", "items": {"enum": ["refines", "combines", "transforms"]}, "minItems": 1}
+      },
+      "required": ["node_id", "subquery", "k", "node_types", "edge_types"]
+    },
+    {
+      "name": "finish",
+      "description": "Stop searching and return the current Pareto archive.",
+      "arguments": {"reason": {"type": "string"}},
+      "required": []
+    }
+  ]
+}

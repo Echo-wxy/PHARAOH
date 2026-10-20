@@ -1,0 +1,9 @@
+# Inference-budget sweep (Table S3) on the full test split: each (max_steps, n_parallel) pair is one run.
+_base_: pharaoh.yaml
+sweep:
+  max_steps: [10, 20]
+  n_parallel: [1, 2, 3]
+  latency:
+    components: [gpu_seconds, api_seconds, wall_clock_seconds]   # recorded separately for every query
+    reported: wall_clock_seconds
+    hardware: 1x NVIDIA H100 for surrogate inference and the graph index; backbone through its API

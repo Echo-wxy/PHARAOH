@@ -1,0 +1,7 @@
+_base_: _base.yaml
+baseline:
+  name: BM25
+  regime: training_free
+  family: retrieval
+  resources: {}
+  params: {k1: 1.2, b: 0.75, field: text}

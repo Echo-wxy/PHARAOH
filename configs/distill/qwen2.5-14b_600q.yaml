@@ -1,0 +1,4 @@
+_base_: _base.yaml
+distill:
+  train_queries_per_graph: 600
+  student: {base_model: Qwen2.5-14B}

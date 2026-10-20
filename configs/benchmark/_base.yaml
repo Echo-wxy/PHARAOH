@@ -1,0 +1,41 @@
+# Libraries, queries, pools, and splits shared by all reservoirs.
+benchmark:
+  seed: 20240917
+  query_templates: prompts/benchmark/query_templates.yaml
+  n_queries: {train: 6000, val: 1000, test: 1000}
+  relation_centric_fraction: null
+  # Queries with the same normalized signature or text form one group;
+  # groups never cross train/val/test. Repeats inside a split are allowed.
+  unique_signatures: false
+  rounding: {musd: 1, water_cut: 0.01, length_m: 10, weight: 0.05}
+  objectives:
+    - {name: eur_mmbbl,       sense: max, unit: MMbbl}
+    - {name: npv_musd,        sense: max, unit: MUSD}
+    - {name: capex_musd,      sense: min, unit: MUSD}
+    - {name: cum_water_mmbbl, sense: min, unit: MMbbl}
+  pattern_types: [five_spot, inverted_five_spot, nine_spot, inverted_nine_spot, line_drive, staggered_line_drive, peripheral]
+  outcome_constraint_ranges:
+    npv_musd_min: null
+    capex_musd_max: null
+    water_cut_max: [0.20, 0.40]
+  # Attribute thresholds are drawn as quantiles of the generated graph.
+  attribute_constraint_quantiles:
+    spacing_min: [0.20, 0.60]
+    depth_max: [0.50, 0.90]
+    n_wells_max: [0.50, 0.90]
+  # Simulated scenario library, split into a surrogate-training library and an
+  # evaluation candidate library (80% / 20%). Scenario ids never overlap, and all
+  # control variants of one well placement stay on the same side.
+  library:
+    size: null
+    eval_size: null
+    split_unit: Well                   # Control = scenario id only; Well = keep placements whole
+    min_structural_matches: 5          # region/pattern constraints only where both libraries have >= 5 scenarios
+  pools:
+    pool_size: null                    # val/test pool; equal to eval_size -> the whole evaluation library
+    train_pool_size: null              # train pool, drawn from the surrogate-training library
+    focus_fraction: 0.5
+  split:
+    test_subset_fraction: 0.10         # 100 test queries per reservoir, shared by all Table 2 configurations
+  labels:
+    id_column: scenario_id

@@ -1,0 +1,5 @@
+# Next-token-only distillation (no physics term).
+_base_: _base.yaml
+distill:
+  loss:
+    phys: {lambda: 0.0}

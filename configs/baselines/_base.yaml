@@ -1,0 +1,18 @@
+# Every baseline declares the resources it can access so that the comparison
+# table (scripts/check_configs.py --resources) is generated from the configs.
+baseline:
+  name: null
+  regime: null                        # training_free | trained_on_target_graph
+  family: null                        # retrieval | agent
+  resources:
+    node_text: true
+    physical_attributes: true
+    surrogate_scores: false
+    feasibility_rules: false
+    llm_backbone: none
+    step_budget: none
+    trained_on_target_graph: false
+evaluation:
+  split: test
+  query_subset: all
+  metrics: [hit@1, recall@20, mrr]

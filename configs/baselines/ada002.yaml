@@ -1,0 +1,7 @@
+_base_: _base.yaml
+baseline:
+  name: ada-002
+  regime: training_free
+  family: retrieval
+  resources: {}
+  params: {embedding_model: text-embedding-ada-002, similarity: cosine, field: text}

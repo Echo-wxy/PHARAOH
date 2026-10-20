@@ -1,0 +1,14 @@
+_base_: _base.yaml
+baseline:
+  name: KAR
+  regime: training_free
+  family: retrieval
+  resources: {surrogate_scores: true, llm_backbone: gpt-4.1}
+  params:
+    expansion_prompt: baselines/kar_expansion.md
+    expansion_llm: gpt-4.1
+    temperature: 0.0
+    relation_constraints: true
+    first_stage: bm25
+    first_stage_k: 100
+    surrogate_rerank_weight: 0.5      # final score = (1 - w) * lexical + w * surrogate relevance

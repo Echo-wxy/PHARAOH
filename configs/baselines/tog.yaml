@@ -1,0 +1,15 @@
+_base_: _base.yaml
+baseline:
+  name: Think-on-Graph
+  regime: training_free
+  family: agent
+  resources: {llm_backbone: gpt-4.1, step_budget: 20}
+  params:
+    temperature: 0.7
+    beam_width: 3
+    max_depth: 3
+    seed_entities: bm25_top3
+    prompts:
+      relation_prune: baselines/tog_relation_prune.md
+      entity_score: baselines/tog_entity_score.md
+      reasoning: baselines/tog_reasoning.md

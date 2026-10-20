@@ -1,0 +1,4 @@
+_base_: _table2_subset.yaml
+agent:
+  tools:
+    proxy_expand: {enabled: false}

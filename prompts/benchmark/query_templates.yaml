@@ -1,0 +1,56 @@
+# Query templates for PetroGraph. Slots in {braces} are filled by
+# pharaoh.petrograph.queries. `objectives` defines the objective set (with the
+# senses declared in the benchmark config) used to compute the ground-truth
+# Pareto set; `outcome_constraints` are checked on simulated outcomes;
+# `attribute_constraints` are checked on node attributes d_V(v).
+property_centric:
+  - id: P01
+    text: "Maximize long-term oil recovery while keeping net present value above ${npv_min} M."
+    objectives: [eur_mmbbl, npv_musd]
+    outcome_constraints: [npv_min]
+  - id: P02
+    text: "Find development plans that maximize net present value with capital expenditure below ${capex_max} M."
+    objectives: [npv_musd, capex_musd]
+    outcome_constraints: [capex_max]
+  - id: P03
+    text: "Maximize oil recovery while limiting water cut to below {water_cut_max_pct}% and keeping wells at least {spacing_min} m apart."
+    objectives: [eur_mmbbl, cum_water_mmbbl]
+    outcome_constraints: [water_cut_max]
+    attribute_constraints: [spacing_min]
+  - id: P04
+    text: "Recommend plans that balance oil recovery against capital cost using at most {n_wells_max} wells with total depth under {depth_max} m."
+    objectives: [eur_mmbbl, capex_musd]
+    attribute_constraints: [n_wells_max, depth_max]
+  - id: P05
+    text: "Maximize net present value and minimize cumulative water production, keeping net present value above ${npv_min} M."
+    objectives: [npv_musd, cum_water_mmbbl]
+    outcome_constraints: [npv_min]
+  - id: P06
+    text: "Design a development plan that maximizes oil recovery while keeping NPV above ${npv_min} M and limiting water cut to below {water_cut_max_pct}%."
+    objectives: [eur_mmbbl, npv_musd]
+    outcome_constraints: [npv_min, water_cut_max]
+relation_centric:
+  - id: R01
+    text: "Within {region_name}, choose a well pattern, a well placement, and an injection schedule that maximize oil recovery with NPV above ${npv_min} M."
+    objectives: [eur_mmbbl, npv_musd]
+    outcome_constraints: [npv_min]
+    attribute_constraints: [region]
+  - id: R02
+    text: "For the patterns available in {region_name}, find placements and control settings that maximize net present value while keeping water cut below {water_cut_max_pct}%."
+    objectives: [npv_musd, cum_water_mmbbl]
+    outcome_constraints: [water_cut_max]
+    attribute_constraints: [region]
+  - id: R03
+    text: "Starting from a {pattern_label} pattern, refine the well placement and controls to maximize oil recovery with capital expenditure below ${capex_max} M."
+    objectives: [eur_mmbbl, capex_musd]
+    outcome_constraints: [capex_max]
+    attribute_constraints: [pattern_type]
+  - id: R04
+    text: "Among {pattern_label} patterns with wells at least {spacing_min} m apart, find control schedules that trade off oil recovery against water production."
+    objectives: [eur_mmbbl, cum_water_mmbbl]
+    attribute_constraints: [pattern_type, spacing_min]
+  - id: R05
+    text: "In {region_name}, refine a {pattern_label} development down to injection controls that maximize NPV with capital expenditure below ${capex_max} M."
+    objectives: [npv_musd, capex_musd]
+    outcome_constraints: [capex_max]
+    attribute_constraints: [region, pattern_type]
